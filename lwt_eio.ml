@@ -32,21 +32,21 @@ let make_engine ~sw ~clock = object
   method private cleanup = Switch.turn_off sw Exit
 
   method private register_readable fd callback =
-    let fd = Eio_linux.FD.of_unix ~sw ~seekable:false fd in
+    (* let fd = Eio_linux.FD.of_unix ~sw ~seekable:false fd in *)
     fork_with_cancel ~sw @@ fun () ->
     Ctf.label "await_readable";
     while true do
-      Eio_linux.await_readable fd;
-      callback (); notify ()
+      Eio_luv.File.await_readable fd callback;
+      notify ()
     done
 
   method private register_writable fd callback =
-    let fd = Eio_linux.FD.of_unix ~sw ~seekable:false fd in
+    (* let fd = Eio_linux.FD.of_unix ~sw ~seekable:false fd in *)
     fork_with_cancel ~sw @@ fun () ->
     Ctf.label "await_writable";
     while true do
-      Eio_linux.await_writable fd;
-      callback (); notify ()
+      Eio_luv.File.await_writable fd callback;
+      notify ()
     done
 
   method private register_timer delay repeat callback =
