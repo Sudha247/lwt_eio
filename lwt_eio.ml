@@ -36,8 +36,8 @@ let make_engine ~sw ~clock = object
     fork_with_cancel ~sw @@ fun () ->
     Ctf.label "await_readable";
     while true do
-      Eio_luv.File.await_readable fd callback;
-      notify ()
+      Eio_luv.Poll.poll_readable fd;
+      callback (); notify ()
     done
 
   method private register_writable fd callback =
@@ -45,8 +45,8 @@ let make_engine ~sw ~clock = object
     fork_with_cancel ~sw @@ fun () ->
     Ctf.label "await_writable";
     while true do
-      Eio_luv.File.await_writable fd callback;
-      notify ()
+      Eio_luv.Poll.poll_writable fd;
+      callback(); notify ()
     done
 
   method private register_timer delay repeat callback =

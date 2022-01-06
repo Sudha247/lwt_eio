@@ -25,7 +25,7 @@ let main_lwt ~to_eio ~from_eio =
 
 let () =
   (* Ctf_unix.with_tracing "/tmp/trace.ctf" @@ fun () -> *)
-  Eio_main.run @@ fun env ->
+  Eio_luv.run @@ fun env ->
   let clock = Eio.Stdenv.clock env in
   Lwt_eio.with_event_loop ~clock @@ fun () ->
   Switch.run @@ fun sw ->
